@@ -3,15 +3,15 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://bdf47suvxkr8l"
-path="res://.godot/imported/progress_background_green.png-6d408d66d9d96656254b6aea57ff2db6.ctex"
+path="res://.godot/imported/progress_background_green.png-ef130102c9f956a58aa2a5aeb1864c76.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://addons/my_plugin/assets/progress_background_green.png"
-dest_files=["res://.godot/imported/progress_background_green.png-6d408d66d9d96656254b6aea57ff2db6.ctex"]
+source_file="res://addons/indiepipeline.interaction_kit_3d/assets/progress_background_green.png"
+dest_files=["res://.godot/imported/progress_background_green.png-ef130102c9f956a58aa2a5aeb1864c76.ctex"]
 
 [params]
 
