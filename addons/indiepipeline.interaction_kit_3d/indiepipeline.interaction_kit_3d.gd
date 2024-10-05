@@ -17,6 +17,8 @@ func _enter_tree() -> void:
 	
 	add_custom_type("Interactable3D", "Area3D", preload("src/interactable_3d.gd"), preload("assets/interaction_kit_3d.svg"))
 	add_custom_type("Grabbable3D", "RigidBody3D", preload("src/pickup/grabbable_3d.gd"), preload("assets/grabbable.svg"))
+	add_custom_type("GrabbableAreaDetector3D", "Area3D", preload("src/pickup/grabbable_area_detector_3d.gd"), null)
+	add_custom_type("Grabber3D", "Node3D", preload("src/pickup/grabber_3d.gd"), preload("assets/grabber.svg"))
 	
 	add_custom_type("RayCastInteractor3D", "RayCast3D", preload("src/interactors/raycast_interactor_3d.gd"), preload("assets/interactor_3d.svg"))
 	add_custom_type("MouseRayCastInteractor3D", "Node3D", preload("src/interactors/mouse_raycast_interactor_3d.gd"), preload("assets/interactor_3d.svg"))
@@ -32,10 +34,14 @@ func _exit_tree() -> void:
 		update_notify_tool_instance = null
 		
 	remove_autoload_singleton("GlobalInteraction3D")
+	
 	remove_custom_type("MouseRayCastInteractor3D")
 	remove_custom_type("RayCastInteractor3D")
-	remove_custom_type("Grabbable3D")
 	remove_custom_type("Interactable3D")
+	
+	remove_custom_type("Grabber3D")
+	remove_custom_type("GrabbableAreaDetector3D")
+	remove_custom_type("Grabbable3D")
 
 ## Update tool referenced from https://github.com/MikeSchulze/gdUnit4/blob/master/addons/gdUnit4
 func _setup_updater() -> void:
