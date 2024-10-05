@@ -10,8 +10,15 @@ signal canceled_interactable_scan(interactable: Interactable3D)
 
 #endregion
 
+#region Picking
+signal grabbable_focused(grabbable: Grabbable3D)
+signal grabbable_unfocused(grabbable: Grabbable3D)
+#endregion
+
+
 func _ready() -> void:
 	_connect_interactables()
+	_connect_grabbables()
 	
 	child_entered_tree.connect(on_child_entered)
 
@@ -20,6 +27,19 @@ func _connect_interactables() -> void:
 	for interactable_3d: Interactable3D in get_tree().get_nodes_in_group(Interactable3D.GroupName):
 		_connect_interactable(interactable_3d)
 	
+
+func _connect_grabbables() -> void:
+	for grabbable_3d: Grabbable3D in get_tree().get_nodes_in_group(Grabbable3D.GroupName):
+		_connect_grabbable(grabbable_3d)
+
+
+func _connect_grabbable(grabbable: Grabbable3D) -> void:
+	if not grabbable.focused.is_connected(on_grabbable_focused):
+		grabbable.focused.connect(on_grabbable_focused.bind(grabbable))
+			
+	if not grabbable.unfocused.is_connected(on_grabbable_unfocused):
+		grabbable.unfocused.connect(on_grabbable_unfocused.bind(grabbable))
+			
 	
 func _connect_interactable(interactable: Interactable3D) -> void:
 	if not interactable.interacted.is_connected(on_interactable_interacted):
@@ -42,6 +62,9 @@ func _connect_interactable(interactable: Interactable3D) -> void:
 func on_child_entered(child: Node) -> void:
 	if child is Interactable3D:
 		_connect_interactable(child as Interactable3D)
+		
+	elif child is Grabbable3D:
+		_connect_grabbable(child as Grabbable3D)
 
 
 func on_interactable_interacted(interactable: Interactable3D):
@@ -62,5 +85,13 @@ func on_interactable_focused(interactable: Interactable3D):
 
 func on_interactable_unfocused(interactable: Interactable3D):
 	interactable_unfocused.emit(interactable)
+	
+	
+func on_grabbable_focused(grabbable: Interactable3D):
+	grabbable_focused.emit(grabbable)
+
+
+func on_grabbable_unfocused(grabbable: Interactable3D):
+	grabbable_unfocused.emit(grabbable)
 	
 #endregion

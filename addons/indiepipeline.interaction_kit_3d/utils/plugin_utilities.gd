@@ -1,5 +1,16 @@
 class_name PluginUtilities
 
+static func is_mouse_left_click(event: InputEvent) -> bool:
+	return event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_LEFT and event.pressed
+
+
+static func is_mouse_right_click(event: InputEvent) -> bool:
+	return event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_RIGHT and event.pressed
+
+
+static func is_mouse_visible() -> bool:
+	return Input.mouse_mode == Input.MOUSE_MODE_VISIBLE || Input.mouse_mode == Input.MOUSE_MODE_CONFINED
+
 
 static func is_valid_url(url: String) -> bool:
 	var regex = RegEx.new()

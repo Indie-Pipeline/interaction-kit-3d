@@ -18,6 +18,7 @@ static var PluginDebugDirectoryPath = "res://debug"
 #region Plugin Settings
 static var UpdateNotificationSetting: String = PluginSettingsBasePath + "/update_notification_enabled"
 static var InteractablesCollisionLayerSetting: String = PluginSettingsBasePath + "/interactables_collision_layer"
+static var GrabbablesCollisionLayerSetting: String = PluginSettingsBasePath + "/grabbables_collision_layer"
 #endregion
 
 static var DebugMode: bool = false
@@ -42,6 +43,19 @@ static func set_interactable_collision_layer(layer_value: int = 16) -> void:
 	 	"value": layer_value,
 		"hint": PROPERTY_HINT_TYPE_STRING,
 		"hint_string": "Set the collision layer for interactables to be detected by interactors"
+	})
+	ProjectSettings.save()
+
+
+## By default on layer 6
+static func set_grabbable_collision_layer(layer_value: int = 32) -> void:
+	ProjectSettings.set_setting(GrabbablesCollisionLayerSetting, layer_value)
+	ProjectSettings.add_property_info({
+		"name": GrabbablesCollisionLayerSetting,
+		"type": typeof(layer_value),
+	 	"value": layer_value,
+		"hint": PROPERTY_HINT_TYPE_STRING,
+		"hint_string": "Set the collision layer for grabbables to be detected by the grabber"
 	})
 	ProjectSettings.save()
 
