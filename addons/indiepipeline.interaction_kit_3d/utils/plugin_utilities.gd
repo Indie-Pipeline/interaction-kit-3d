@@ -34,6 +34,22 @@ static func rotate_horizontal_random(origin: Vector3 = Vector3.ONE) -> Vector3:
 	return origin.rotated(arc_direction, randf_range(-PI / 2, PI / 2))
 
 
+## Only works for native custom class not for GDScriptNativeClass
+## Example NodePositioner.find_nodes_of_custom_class(self, MachineState)
+static func find_nodes_of_custom_class(node: Node, class_to_find: Variant) -> Array:
+	var  result := []
+	
+	var childrens = node.get_children(true)
+
+	for child in childrens:
+		if child.get_script() == class_to_find:
+			result.append(child)
+		else:
+			result.append_array(find_nodes_of_custom_class(child, class_to_find))
+	
+	return result
+
+
 static func is_valid_url(url: String) -> bool:
 	var regex = RegEx.new()
 	var url_pattern = "/(https:\\/\\/www\\.|http:\\/\\/www\\.|https:\\/\\/|http:\\/\\/)?[a-zA-Z]{2,}(\\.[a-zA-Z]{2,})(\\.[a-zA-Z]{2,})?\\/[a-zA-Z0-9]{2,}|((https:\\/\\/www\\.|http:\\/\\/www\\.|https:\\/\\/|http:\\/\\/)?[a-zA-Z]{2,}(\\.[a-zA-Z]{2,})(\\.[a-zA-Z]{2,})?)|(https:\\/\\/www\\.|http:\\/\\/www\\.|https:\\/\\/|http:\\/\\/)?[a-zA-Z0-9]{2,}\\.[a-zA-Z0-9]{2,}\\.[a-zA-Z0-9]{2,}(\\.[a-zA-Z0-9]{2,})?/g"

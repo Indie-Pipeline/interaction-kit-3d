@@ -16,12 +16,14 @@ signal grabbable_unfocused(grabbable: Grabbable3D)
 #endregion
 
 
+func _enter_tree() -> void:
+	get_tree().root.child_entered_tree.connect(on_child_entered)
+	
+	
 func _ready() -> void:
 	_connect_interactables()
 	_connect_grabbables()
 	
-	child_entered_tree.connect(on_child_entered)
-
 
 func _connect_interactables() -> void:
 	for interactable_3d: Interactable3D in get_tree().get_nodes_in_group(Interactable3D.GroupName):
@@ -65,6 +67,12 @@ func on_child_entered(child: Node) -> void:
 		
 	elif child is Grabbable3D:
 		_connect_grabbable(child as Grabbable3D)
+	else:
+		for interactable: Interactable3D in PluginUtilities.find_nodes_of_custom_class(child, Interactable3D):
+			_connect_interactable(interactable)
+			
+		for grabbable: Grabbable3D in PluginUtilities.find_nodes_of_custom_class(child, Grabbable3D):
+			_connect_grabbable(grabbable)
 
 
 func on_interactable_interacted(interactable: Interactable3D):
