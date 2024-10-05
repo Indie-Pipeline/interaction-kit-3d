@@ -12,6 +12,28 @@ static func is_mouse_visible() -> bool:
 	return Input.mouse_mode == Input.MOUSE_MODE_VISIBLE || Input.mouse_mode == Input.MOUSE_MODE_CONFINED
 
 
+static func action_just_pressed_and_exists(action: String) -> bool:
+	return InputMap.has_action(action) and Input.is_action_just_pressed(action)
+
+
+static func action_pressed_and_exists(action: String, event: InputEvent = null) -> bool:
+	return InputMap.has_action(action) and event.is_action_pressed(action) if event else Input.is_action_pressed(action)
+
+
+static func global_distance_to_v3(a: Node3D, b: Node3D) -> float:
+	return a.global_position.distance_to(b.global_position)
+
+
+static func generate_3d_random_fixed_direction() -> Vector3:
+	return Vector3(randi_range(-1, 1), randi_range(-1, 1), randi_range(-1, 1)).normalized()
+
+
+static func rotate_horizontal_random(origin: Vector3 = Vector3.ONE) -> Vector3:
+	var arc_direction: Vector3 = [Vector3.DOWN, Vector3.UP].pick_random()
+	
+	return origin.rotated(arc_direction, randf_range(-PI / 2, PI / 2))
+
+
 static func is_valid_url(url: String) -> bool:
 	var regex = RegEx.new()
 	var url_pattern = "/(https:\\/\\/www\\.|http:\\/\\/www\\.|https:\\/\\/|http:\\/\\/)?[a-zA-Z]{2,}(\\.[a-zA-Z]{2,})(\\.[a-zA-Z]{2,})?\\/[a-zA-Z0-9]{2,}|((https:\\/\\/www\\.|http:\\/\\/www\\.|https:\\/\\/|http:\\/\\/)?[a-zA-Z]{2,}(\\.[a-zA-Z]{2,})(\\.[a-zA-Z]{2,})?)|(https:\\/\\/www\\.|http:\\/\\/www\\.|https:\\/\\/|http:\\/\\/)?[a-zA-Z0-9]{2,}\\.[a-zA-Z0-9]{2,}\\.[a-zA-Z0-9]{2,}(\\.[a-zA-Z0-9]{2,})?/g"

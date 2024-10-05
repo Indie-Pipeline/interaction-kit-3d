@@ -51,6 +51,100 @@ signal dropped_grabbable(body: Grabbable3D)
 var active_grabbables: Array[ActiveGrabbable] = []
 
 
+func _input(_event: InputEvent) -> void:
+	if push_wave_ability and active_grabbables.is_empty() and PluginUtilities.action_just_pressed_and_exists(push_wave_input_action):
+		push_wave()
+		
+	if pull_individual_ability and PluginUtilities.action_just_pressed_and_exists(pull_input_action):
+		if slots_available():
+			if grabbable_interactor and grabbable_interactor.is_colliding():
+				var body = grabbable_interactor.get_collider() as Grabbable3D
+				
+				if body and not body.state_is_pull():
+					pull_body(body)
+	
+	if pull_area_ability and PluginUtilities.action_just_pressed_and_exists(pull_area_input_action) and slots_available():
+		var grabbables := get_near_grabbables()
+
+		for body: Grabbable3D in grabbables:
+			pull_body(body)
+			
+		grabbable_area_detector.monitoring = grabbables.is_empty()
+		
+				
+	## TODO - SEE A WAY TO DROP A SELECTED GRABBABLE
+	if PluginUtilities.action_just_pressed_and_exists(drop_input_action):
+		for active_grabbable: ActiveGrabbable in active_grabbables:
+			drop_body(active_grabbable.body)
+			
+	elif PluginUtilities.action_just_pressed_and_exists(throw_input_action):
+		for active_grabbable: ActiveGrabbable in active_grabbables:
+			throw_body(active_grabbable.body)
+	
+
+func _enter_tree() -> void:
+	throwed_grabbable.connect(on_throwed_grabbable)
+	dropped_grabbable.connect(on_dropped_grabbable)
+
+
+func _ready() -> void:
+	_prepare_available_slots()
+	set_physics_process(false)
+	
+
+func _physics_process(_delta: float):
+	for active_grabbable: ActiveGrabbable in active_grabbables:
+		pull_force(active_grabbable.body)
+		
+		
+func pull_body(body: Grabbable3D, grabber: Node3D = get_random_free_slot()):
+	if body_can_be_lifted(body) and slots_available():
+		body.pull(grabber)
+		active_grabbables.append(ActiveGrabbable.new(body, grabber))
+		pulled_grabbable.emit(body)
+		set_physics_process(true)
+	else:
+		set_physics_process(false)
+
+	
+func pull_force(body: Grabbable3D):
+	body.update_linear_velocity()
+	body.update_angular_velocity()
+
+
+func throw_body(body: Grabbable3D) -> void:
+	active_grabbables = active_grabbables.filter(func(active_grabbable: ActiveGrabbable): return active_grabbable.body != body)
+	body.throw()
+	throwed_grabbable.emit(body)
+	
+	set_physics_process(active_grabbables.size() > 0)
+	
+	
+func drop_body(body: Grabbable3D) -> void:
+	active_grabbables = active_grabbables.filter(func(active_grabbable: ActiveGrabbable): return active_grabbable.body != body)
+	body.drop()
+	dropped_grabbable.emit(body)
+	
+	set_physics_process(active_grabbables.size() > 0)
+	
+
+func push_wave():
+	if push_wave_ability:
+		add_child(PushWaveArea3D.new())
+	
+
+func get_near_grabbables() -> Array:
+	if grabbable_area_detector and grabbable_area_detector.monitoring:
+		var bodies := grabbable_area_detector.get_overlapping_bodies().filter(func(body): return body is Grabbable3D)
+		bodies.sort_custom(func(a: Grabbable3D, b: Grabbable3D): return PluginUtilities.global_distance_to_v3(a, self) <= PluginUtilities.global_distance_to_v3(b, self))
+		return bodies.slice(0, max_number_of_grabbables)
+		
+	return []
+
+
+func body_can_be_lifted(body: Grabbable3D) -> bool:
+	return body.mass <= mass_lift_force
+
 
 #region Slot related
 func slots_available() -> bool:
@@ -87,3 +181,15 @@ func _prepare_grabbable_area_detector(area_detector: GrabbableAreaDetector3D):
 	area_detector.priority = 2
 	area_detector.collision_layer = 0
 	area_detector.collision_mask = ProjectSettings.get_setting(MyPluginSettings.GrabbablesCollisionLayerSetting)
+
+
+#region Signal callbacks
+func on_dropped_grabbable(_grabbable: Grabbable3D) -> void:
+	if grabbable_area_detector:
+		grabbable_area_detector.monitoring = true
+
+
+func on_throwed_grabbable(_grabbable: Grabbable3D) -> void:
+	if grabbable_area_detector:
+		grabbable_area_detector.monitoring = true
+#endregion
