@@ -17,6 +17,7 @@ static var PluginDebugDirectoryPath = "res://debug"
 
 #region Plugin Settings
 static var UpdateNotificationSetting: String = PluginSettingsBasePath + "/update_notification_enabled"
+static var InteractablesCollisionLayerSetting: String = PluginSettingsBasePath + "/interactables_collision_layer"
 #endregion
 
 static var DebugMode: bool = false
@@ -32,6 +33,18 @@ static func set_update_notification(enable: bool = true) -> void:
 	})
 	ProjectSettings.save()
 
+## By default on layer 5
+static func set_interactable_collision_layer(layer_value: int = 16) -> void:
+	ProjectSettings.set_setting(InteractablesCollisionLayerSetting, layer_value)
+	ProjectSettings.add_property_info({
+		"name": InteractablesCollisionLayerSetting,
+		"type": typeof(layer_value),
+	 	"value": layer_value,
+		"hint": PROPERTY_HINT_TYPE_STRING,
+		"hint_string": "Set the collision layer for interactables to be detected by interactors"
+	})
+	ProjectSettings.save()
+
 
 static func is_update_notification_enabled() -> bool:
 	return ProjectSettings.get_setting(UpdateNotificationSetting, true)
@@ -39,6 +52,7 @@ static func is_update_notification_enabled() -> bool:
 
 static func remove_settings() -> void:
 	remove_setting(UpdateNotificationSetting)
+	remove_setting(InteractablesCollisionLayerSetting)
 
 
 static func remove_setting(name: String) -> void:
