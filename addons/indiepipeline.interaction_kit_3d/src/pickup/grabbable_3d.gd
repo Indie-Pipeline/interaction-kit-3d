@@ -29,6 +29,11 @@ enum GrabState {
 	Throw
 }
 
+enum GrabMode {
+	Pull, # Pull the body to the selected slot
+	InPlace # Move the body in place, no pulling is applied
+}
+
 enum OutlineMode {
 	EdgeShader,
 	InvertedHull
@@ -37,6 +42,7 @@ enum OutlineMode {
 ## The mesh related to this grabbable to apply the outline
 @export var grabbable_mesh: MeshInstance3D
 @export_group("Force")
+@export var grab_mode: GrabMode = GrabMode.Pull
 ## The initial pull power to attract and manipulate this grabbable
 @export var pull_power: float = 7.5
 ## The initial throw power to apply force impulses this grabbable
@@ -61,6 +67,7 @@ enum OutlineMode {
 @export var outline_hull_color: Color = Color.WHITE
 @export_range(0, 16, 0.01) var outline_grow_amount: float = 0.02
 @export_group("Information")
+@export var id: String = ""
 @export var title: String = ""
 @export var description: String = ""
 @export var title_translation_key: String = ""

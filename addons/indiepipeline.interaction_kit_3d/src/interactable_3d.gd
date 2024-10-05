@@ -22,6 +22,7 @@ enum OutlineMode {
 @export var change_screen_pointer: bool = true
 @export var lock_player_on_interact: bool = false
 @export_group("Information")
+@export var id: String = ""
 @export var title: String = ""
 @export var description: String = ""
 @export var title_translation_key: String = ""
