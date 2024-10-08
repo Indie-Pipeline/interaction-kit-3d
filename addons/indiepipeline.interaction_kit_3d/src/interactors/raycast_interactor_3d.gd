@@ -1,7 +1,7 @@
 class_name RayCastInteractor3D extends RayCast3D
 
 @export var interact_input_action: String = "interact"
-@export var input_action_to_cancel: String = "cancel_interact"
+@export var cancel_interact_input_action: String = "cancel_interact"
 
 
 var current_interactable: Interactable3D
@@ -12,6 +12,11 @@ var interacting: bool = false
 func _unhandled_input(_event: InputEvent):
 	if InputMap.has_action(interact_input_action) && Input.is_action_just_pressed(interact_input_action) and current_interactable and not interacting:
 		interact(current_interactable)
+		
+	
+	if InputMap.has_action(cancel_interact_input_action) && Input.is_action_just_pressed(cancel_interact_input_action) and current_interactable:
+		cancel_interact(current_interactable)
+		
 	
 
 func _enter_tree():

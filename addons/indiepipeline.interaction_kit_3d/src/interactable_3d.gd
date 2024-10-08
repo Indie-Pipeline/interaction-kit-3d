@@ -18,8 +18,8 @@ enum OutlineMode {
 @export var activate_on_start: bool = true
 @export var disable_after_interaction: bool = false
 @export var number_of_times_can_be_interacted: int = 0
-@export var change_cursor: bool = true
-@export var change_screen_pointer: bool = true
+@export var change_cursor_on_focus: bool = true
+@export var change_screen_pointer_focus: bool = true
 @export var lock_player_on_interact: bool = false
 @export_group("Information")
 @export var id: String = ""

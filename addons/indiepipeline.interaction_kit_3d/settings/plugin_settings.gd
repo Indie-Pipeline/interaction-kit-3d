@@ -35,12 +35,14 @@ static func set_update_notification(enable: bool = true) -> void:
 	ProjectSettings.save()
 
 ## By default on layer 5
-static func set_interactable_collision_layer(layer_value: int = 16) -> void:
-	ProjectSettings.set_setting(InteractablesCollisionLayerSetting, layer_value)
+static func set_interactable_collision_layer(interactable_layer: int = 6) -> void:
+	interactable_layer = clamp(interactable_layer, 1, 32)
+	
+	ProjectSettings.set_setting(InteractablesCollisionLayerSetting, interactable_layer)
 	ProjectSettings.add_property_info({
 		"name": InteractablesCollisionLayerSetting,
-		"type": typeof(layer_value),
-	 	"value": layer_value,
+		"type": typeof(interactable_layer),
+	 	"value": interactable_layer,
 		"hint": PROPERTY_HINT_TYPE_STRING,
 		"hint_string": "Set the collision layer for interactables to be detected by interactors"
 	})
@@ -48,12 +50,14 @@ static func set_interactable_collision_layer(layer_value: int = 16) -> void:
 
 
 ## By default on layer 6
-static func set_grabbable_collision_layer(layer_value: int = 32) -> void:
-	ProjectSettings.set_setting(GrabbablesCollisionLayerSetting, layer_value)
+static func set_grabbable_collision_layer(grabbable_layer: int = 7) -> void:
+	grabbable_layer = clamp(grabbable_layer, 1, 32)
+	
+	ProjectSettings.set_setting(GrabbablesCollisionLayerSetting, grabbable_layer)
 	ProjectSettings.add_property_info({
 		"name": GrabbablesCollisionLayerSetting,
-		"type": typeof(layer_value),
-	 	"value": layer_value,
+		"type": typeof(grabbable_layer),
+	 	"value": grabbable_layer,
 		"hint": PROPERTY_HINT_TYPE_STRING,
 		"hint_string": "Set the collision layer for grabbables to be detected by the grabber"
 	})
@@ -67,6 +71,7 @@ static func is_update_notification_enabled() -> bool:
 static func remove_settings() -> void:
 	remove_setting(UpdateNotificationSetting)
 	remove_setting(InteractablesCollisionLayerSetting)
+	remove_setting(GrabbablesCollisionLayerSetting)
 
 
 static func remove_setting(name: String) -> void:

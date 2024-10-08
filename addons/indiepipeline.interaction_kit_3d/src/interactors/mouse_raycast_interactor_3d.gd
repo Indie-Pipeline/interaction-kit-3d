@@ -3,7 +3,7 @@ class_name MouseRayCastInteractor3D extends Node3D
 @export var origin_camera: Camera3D
 @export var ray_length: float = 1000.0
 @export var interact_mouse_button = MOUSE_BUTTON_LEFT
-@export var input_action_to_cancel: String = "cancel_interact"
+@export var cancel_interact_input_action: String = "cancel_interact"
 
 @onready var current_camera: Camera3D = origin_camera:
 	set(new_camera):
@@ -27,7 +27,7 @@ func _unhandled_input(event: InputEvent) -> void:
 			or interact_mouse_button == MOUSE_BUTTON_RIGHT and PluginUtilities.is_mouse_right_click(event):
 				interact(current_interactable)
 	
-	if is_processing() and InputMap.has_action(input_action_to_cancel) and Input.is_action_just_pressed(input_action_to_cancel) and current_interactable is Interactable3D:
+	if is_processing() and InputMap.has_action(cancel_interact_input_action) and Input.is_action_just_pressed(cancel_interact_input_action) and current_interactable is Interactable3D:
 		cancel_interact(current_interactable)
 
 
